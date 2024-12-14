@@ -1,0 +1,16 @@
+
+WITH CTE AS(
+  SELECT 
+    sender_id,
+    COUNT(*) message_count,
+    DENSE_RANK() OVER(ORDER BY COUNT(message_id) DESC) topn
+  FROM messages
+  WHERE EXTRACT(YEAR FROM sent_date) = '2022'
+    AND EXTRACT(MONTH FROM sent_date) = '08'
+  GROUP BY sender_id
+  ORDER BY message_count DESC
+)
+
+SELECT sender_id, message_count
+FROM CTE
+WHERE topn <=2;
