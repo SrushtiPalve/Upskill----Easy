@@ -1,0 +1,21 @@
+WITH CTE AS(
+  SELECT 
+    account_id,
+    SUM(
+      CASE
+      WHEN transaction_type = 'Deposit' THEN amount
+      END 
+      ) AS deposits,
+      SUM(
+      CASE
+      WHEN transaction_type = 'Withdrawal' THEN amount
+      END 
+      ) AS withdrawals
+  FROM transactions
+  GROUP BY account_id
+)
+
+SELECT 
+  account_id,
+  deposits-withdrawals AS final_balance
+FROM CTE
