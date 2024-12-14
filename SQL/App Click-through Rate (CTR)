@@ -1,0 +1,16 @@
+WITH Counts AS(
+  SELECT 
+    app_id,
+    COUNT(CASE WHEN event_type = 'click' THEN 1 END) count_clicks,
+    COUNT(CASE WHEN event_type = 'impression' THEN 1 END) count_impressions
+  FROM events
+  WHERE EXTRACT(YEAR FROM timestamp) = '2022'
+  GROUP BY app_id
+)
+
+SELECT app_id,
+  ROUND(
+    (100.0*count_clicks/count_impressions),
+    2
+  ) AS ctr 
+  FROM Counts;
